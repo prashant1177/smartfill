@@ -42,13 +42,12 @@ addFieldBtn.addEventListener('click', () => addCustomField());
 
 function addCustomField(field = '', value = '') {
   const row = document.createElement('div');
-  row.className = 'field-row';
-row.innerHTML = `
-  <input class="field-name" placeholder="Field name" value="${field}">
-  <input class="field-value" placeholder="Field value" value="${value}">
-  <button type="button" class="remove-button">✕</button>
-`;
+  row.className = 'field-row custom-field'; // Add custom-field class here
+  row.innerHTML = `
+    <input class="field-name" placeholder="Field name" value="${field}">
+    <input class="field-value" placeholder="Field value" value="${value}">
+    <button type="button" class="remove-button">✕</button>
+  `;
   row.querySelector('button').addEventListener('click', () => row.remove());
   customFieldsContainer.appendChild(row);
 }
-

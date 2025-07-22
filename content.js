@@ -14,28 +14,47 @@ chrome.storage.sync.get(null, (data) => {
 
   if (data.customFields) {
     data.customFields.forEach(({ field, value }) => {
-      mappings[field.toLowerCase()] = value;
+      if (field) mappings[field.toLowerCase()] = value;
     });
   }
 
-  const inputs = document.querySelectorAll("input");
+  // Autofill logic for any form control
+  const allFields = document.querySelectorAll("input, select, textarea");
 
-  inputs.forEach(input => {
-    const key = (input.name || input.id || input.placeholder || "").toLowerCase().trim();
+  allFields.forEach(field => {
+    const key = (
+      field.name || 
+      field.id || 
+      field.placeholder || 
+      field.getAttribute("aria-label") || 
+      ""
+    ).toLowerCase().trim();
 
+    let matchedValue = null;
 
     if (mappings[key]) {
-      input.value = mappings[key];
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      return;
-    }
+      matchedValue = mappings[key];
+    } else {
     
-    for (const field in mappings) {
-      if (key.includes(field)) {
-        input.value = mappings[field];
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        break;
+      for (const mapKey in mappings) {
+        if (key.includes(mapKey)) {
+          matchedValue = mappings[mapKey];
+          break;
+        }
       }
+    }
+
+    if (matchedValue != null) {
+      if (field.type === "radio" || field.type === "checkbox") {
+        if (field.value.toLowerCase() === matchedValue.toString().toLowerCase()) {
+          field.checked = true;
+        }
+      } else {
+        field.value = matchedValue;
+      }
+
+      field.dispatchEvent(new Event('input', { bubbles: true }));
+      field.dispatchEvent(new Event('change', { bubbles: true }));
     }
   });
 });
