@@ -42,16 +42,12 @@ addFieldBtn.addEventListener('click', () => addCustomField());
 
 function addCustomField(field = '', value = '') {
   const row = document.createElement('div');
-  row.className = 'custom-field flex gap-2 items-center';
-
-  row.innerHTML = `
-    <input class="field-name flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-           placeholder="Field name" value="${field}">
-    <input class="field-value flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-           placeholder="Field value" value="${value}">
-    <button type="button" class="text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded-md text-sm">✕</button>
-  `;
-
+  row.className = 'field-row';
+row.innerHTML = `
+  <input class="field-name" placeholder="Field name" value="${field}">
+  <input class="field-value" placeholder="Field value" value="${value}">
+  <button type="button" class="remove-button">✕</button>
+`;
   row.querySelector('button').addEventListener('click', () => row.remove());
   customFieldsContainer.appendChild(row);
 }
