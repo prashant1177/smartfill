@@ -1,4 +1,3 @@
-
 chrome.storage.sync.get(null, (data) => {
   const mappings = {
     "name": data.fullName,
@@ -22,7 +21,15 @@ chrome.storage.sync.get(null, (data) => {
   const inputs = document.querySelectorAll("input");
 
   inputs.forEach(input => {
-    const key = (input.name || input.id || input.placeholder || "").toLowerCase();
+    const key = (input.name || input.id || input.placeholder || "").toLowerCase().trim();
+
+
+    if (mappings[key]) {
+      input.value = mappings[key];
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      return;
+    }
+    
     for (const field in mappings) {
       if (key.includes(field)) {
         input.value = mappings[field];
